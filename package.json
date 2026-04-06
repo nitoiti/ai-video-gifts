@@ -1,0 +1,35 @@
+{
+  "name": "ai-video-gifts",
+  "version": "1.0.0",
+  "description": "AI Video Gifts - Оживляем старые фотографии для родителей",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build step needed - static site'",
+    "deploy": "echo 'Run deploy script manually'",
+    "deploy-netlify": "netlify deploy --prod --dir=.",
+    "deploy-vercel": "vercel --prod",
+    "deploy-github": "git push origin main"
+  },
+  "keywords": [
+    "ai",
+    "video",
+    "gifts",
+    "moldova",
+    "romanian",
+    "russian"
+  ],
+  "author": "AI Video Gifts Team",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ai-video-gifts.git"
+  },
+  "homepage": "https://ai-video-gifts.netlify.app",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
