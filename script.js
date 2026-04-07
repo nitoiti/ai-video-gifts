@@ -3,6 +3,40 @@ let selectedFiles = [];
 let generatedVideos = [];
 let selectedVideos = [];
 let currentStep = 1;
+let activeGenerationTasks = new Map();
+
+// Include API integration
+const script = document.createElement('script');
+script.src = 'api.js';
+document.head.appendChild(script);
+
+// Include storage
+const storageScript = document.createElement('script');
+storageScript.src = 'storage.js';
+document.head.appendChild(storageScript);
+
+// Wait for both scripts to load
+let apiLoaded = false;
+let storageLoaded = false;
+
+function checkDependencies() {
+    if (apiLoaded && storageLoaded) {
+        console.log('All dependencies loaded');
+        // Initialize storage cleanup
+        window.VideoStorage.clearOldVideos();
+    }
+}
+
+script.onload = function() {
+    apiLoaded = true;
+    checkDependencies();
+};
+
+storageScript.onload = function() {
+    storageLoaded = true;
+    checkDependencies();
+};
+
 const plans = {
     basic: { name: 'Начальный', price: 490, duration: 'до 15 секунд' },
     standard: { name: 'Стандарт', price: 1990, duration: 'до 60 секунд' },
@@ -156,26 +190,145 @@ function removeFiles() {
     showNotification('Фотографии удалены', 'info');
 }
 
-// Generate videos from photos
-function generateVideos() {
+// Generate videos from photos using real API
+async function generateVideos() {
+    if (!window.RunwayMLIntegration) {
+        showNotification('API интеграция загружается...', 'info');
+        setTimeout(() => generateVideos(), 1000);
+        return;
+    }
+    
     if (selectedFiles.length !== 3) {
         showNotification('Пожалуйста, загрузите 3 фотографии', 'error');
         return;
     }
     
-    showNotification('Генерация видео началась...', 'info');
+    showNotification('Начинаем генерацию видео...', 'info');
     
-    // Simulate video generation
-    setTimeout(() => {
-        generatedVideos = [
-            { id: 1, url: 'https://via.placeholder.com/400x300/667eea/ffffff?text=Video+1', title: 'Вариант 1' },
-            { id: 2, url: 'https://via.placeholder.com/400x300/764ba2/ffffff?text=Video+2', title: 'Вариант 2' },
-            { id: 3, url: 'https://via.placeholder.com/400x300/f59e0b/ffffff?text=Video+3', title: 'Вариант 3' }
-        ];
+    try {
+        // Upload files to server first
+        const uploadPromises = selectedFiles.map(file => 
+            window.RunwayMLIntegration.videoGenerator.uploader.uploadFile(file)
+        );
         
-        showGeneratedVideos();
-        showNotification('Видео сгенерированы! Выберите понравившиеся.', 'success');
-    }, 3000);
+        const uploadResults = await Promise.all(uploadPromises);
+        
+        // Check if all uploads succeeded
+        const failedUploads = uploadResults.filter(result => !result.success);
+        if (failedUploads.length > 0) {
+            throw new Error(`Failed to upload ${failedUploads.length} files`);
+        }
+        
+        // Generate videos using RunwayML
+        const generationTasks = await window.RunwayMLIntegration.processPhotos(selectedFiles, {
+            duration: 5,
+            prompt: 'Animate this photo with natural movements and transitions'
+        });
+        
+        if (generationTasks.length === 0) {
+            throw new Error('No generation tasks created');
+        }
+        
+        // Store active tasks for polling
+        generationTasks.forEach(task => {
+            activeGenerationTasks.set(task.taskId, task);
+        });
+        
+        // Start polling for results
+        pollForVideoResults(generationTasks);
+        
+    } catch (error) {
+        console.error('Generation error:', error);
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    }
+}
+
+// Poll for video generation results
+async function pollForVideoResults(tasks) {
+    const maxWaitTime = 300000; // 5 minutes
+    const startTime = Date.now();
+    
+    // Show progress UI
+    showProgressContainer();
+    
+    while (Date.now() - startTime < maxWaitTime) {
+        let allCompleted = true;
+        
+        for (const task of tasks) {
+            if (task.status === 'COMPLETED' || task.status === 'FAILED') {
+                continue;
+            }
+            
+            allCompleted = false;
+            
+            // Check task status
+            const statusResult = await window.RunwayMLIntegration.videoGenerator.api.getTaskStatus(task.taskId);
+            
+            if (statusResult.success) {
+                task.status = statusResult.status;
+                task.progress = statusResult.progress;
+                
+                if (statusResult.status === 'COMPLETED' && statusResult.videoUrl) {
+                    task.videoUrl = statusResult.videoUrl;
+                    showNotification(`Видео ${task.fileIndex + 1} готово!`, 'success');
+                } else if (statusResult.status === 'FAILED') {
+                    showNotification(`Ошибка генерации видео ${task.fileIndex + 1}`, 'error');
+                }
+            }
+        }
+        
+        // Update progress UI
+        updateProgressUI(tasks);
+        
+        if (allCompleted) {
+            break;
+        }
+        
+        // Wait 2 seconds before next poll
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    
+    // Show completed videos
+    showGeneratedVideos(tasks.filter(task => task.status === 'COMPLETED'));
+}
+
+// Show progress container
+function showProgressContainer() {
+    const step1 = document.getElementById('step1');
+    const progressHtml = `
+        <div id="generation-progress" class="mb-6 p-4 bg-blue-50 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium">Генерация видео...</span>
+                <span class="text-sm text-gray-600" id="progress-text">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+    `;
+    
+    // Insert progress container before the generate button
+    const generateButton = step1.querySelector('button[onclick="generateVideos()"]');
+    generateButton.insertAdjacentHTML('beforeprogress', progressHtml);
+    generateButton.style.display = 'none';
+}
+
+// Update progress UI
+function updateProgressUI(tasks) {
+    const progressText = document.getElementById('progress-text');
+    const progressBar = document.getElementById('progress-bar');
+    
+    if (!progressText || !progressBar) return;
+    
+    let totalProgress = 0;
+    tasks.forEach(task => {
+        totalProgress += task.progress || 0;
+    });
+    
+    const avgProgress = Math.round(totalProgress / tasks.length);
+    
+    progressText.textContent = `${avgProgress}%`;
+    progressBar.style.width = `${avgProgress}%`;
 }
 
 // Show generated videos
@@ -191,14 +344,23 @@ function showGeneratedVideos() {
     // Clear and populate videos grid
     videosGrid.innerHTML = '';
     
-    generatedVideos.forEach(video => {
+    generatedVideos.forEach((video, index) => {
         const videoDiv = document.createElement('div');
         videoDiv.className = 'relative group';
         videoDiv.innerHTML = `
             <div class="relative">
-                <img src="${video.url}" class="w-full h-48 object-cover rounded-lg cursor-pointer" alt="${video.title}">
+                ${video.videoUrl ? 
+                    `<video class="w-full h-48 object-cover rounded-lg" controls autoplay muted loop>
+                        <source src="${video.videoUrl}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>` :
+                    `<img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Loading..." class="w-full h-48 object-cover rounded-lg" alt="Loading...">`
+                }
                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition rounded-lg flex items-center justify-center">
-                    <input type="checkbox" class="video-checkbox w-6 h-6 opacity-0 group-hover:opacity-100 transition" data-video-id="${video.id}">
+                    <input type="checkbox" class="video-checkbox w-6 h-6 opacity-0 group-hover:opacity-100 transition" 
+                           data-video-id="${video.id}" 
+                           ${video.videoUrl ? 'disabled' : ''}>
+                    ${video.videoUrl ? '<span class="text-white text-xs">✓</span>' : ''}
                 </div>
                 <div class="absolute top-2 left-2 bg-white rounded-full px-2 py-1">
                     <span class="text-xs font-semibold text-purple-600">${video.title}</span>
@@ -230,22 +392,51 @@ function handleVideoSelection(event) {
 
 // Merge selected videos
 function mergeSelectedVideos() {
-    if (selectedVideos.length === 0) {
+    const checkedBoxes = document.querySelectorAll('.video-checkbox:checked');
+    const selectedVideoIds = Array.from(checkedBoxes).map(cb => parseInt(cb.dataset.videoId));
+    
+    if (selectedVideoIds.length === 0) {
         showNotification('Пожалуйста, выберите хотя бы одно видео', 'error');
         return;
     }
     
     showNotification('Объединение видео...', 'info');
     
-    // Simulate merging
-    setTimeout(() => {
-        showFinalVideo();
-        showNotification('Видео успешно объединено!', 'success');
-    }, 2000);
+    try {
+        // Get selected video URLs
+        const selectedVideoData = generatedVideos.filter(video => 
+            selectedVideoIds.includes(video.id) && video.videoUrl
+        );
+        
+        if (selectedVideoData.length === 0) {
+            throw new Error('No completed videos selected');
+        }
+        
+        // Create final video by combining selected videos
+        const finalVideoUrl = await combineVideos(selectedVideoData);
+        
+        if (finalVideoUrl) {
+            showFinalVideo(finalVideoUrl);
+            showNotification('Видео успешно объединено!', 'success');
+        } else {
+            throw new Error('Failed to combine videos');
+        }
+        
+    } catch (error) {
+        console.error('Merge error:', error);
+        showNotification(`Ошибка: ${error.message}`, 'error');
+    }
+}
+
+// Combine videos (placeholder for now, will be real implementation)
+function combineVideos(videos) {
+    // For now, return first selected video URL
+    // In production, this would call a video editing API
+    return videos[0].videoUrl;
 }
 
 // Show final video
-function showFinalVideo() {
+function showFinalVideo(finalVideoUrl) {
     const step2 = document.getElementById('step2');
     const step3 = document.getElementById('step3');
     const finalVideo = document.getElementById('final-video');
@@ -258,8 +449,8 @@ function showFinalVideo() {
     finalVideo.innerHTML = `
         <div class="max-w-2xl mx-auto">
             <div class="bg-gray-100 rounded-lg p-4 mb-6">
-                <video class="w-full rounded-lg" controls>
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                <video class="w-full rounded-lg" controls autoplay muted loop>
+                    <source src="${finalVideoUrl}" type="video/mp4">
                     Ваш браузер не поддерживает видео.
                 </video>
             </div>
