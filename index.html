@@ -1,458 +1,328 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Видео Подарки - Оживите старые фотографии</title>
+    <title>Memory Video Gifts - Оживляем старые фотографии для родителей</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef7ee',
+                            100: '#fdecd1',
+                            200: '#fad4a3',
+                            300: '#f6b468',
+                            400: '#f18a3a',
+                            500: '#ed6f1c',
+                            600: '#dd5a0e',
+                            700: '#b8460f',
+                            800: '#933813',
+                            900: '#772f13',
+                        },
+                        neutral: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            300: '#d4d4d4',
+                            400: '#a3a3a3',
+                            500: '#737373',
+                            600: '#525252',
+                            700: '#404040',
+                            800: '#262626',
+                            900: '#171717',
+                        }
+                    }
+                }
+            }
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .hover-scale {
-            transition: transform 0.3s ease;
-        }
-        .hover-scale:hover {
-            transform: scale(1.05);
-        }
-        .upload-area {
-            border: 2px dashed #cbd5e0;
-            transition: all 0.3s ease;
-        }
-        .upload-area:hover {
-            border-color: #667eea;
-            background-color: #f7fafc;
-        }
-        .upload-area.dragover {
-            border-color: #667eea;
-            background-color: #edf2f7;
-        }
-    </style>
+    </script>
 </head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-video text-purple-600 text-2xl"></i>
-                    <span class="text-xl font-bold text-gray-800">AI Видео Подарки</span>
-                </div>
-                <div class="hidden md:flex space-x-6 items-center">
-                    <a href="#features" class="text-gray-600 hover:text-purple-600 transition" id="nav-features">Возможности</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-purple-600 transition" id="nav-pricing">Цены</a>
-                    <div class="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-300">
-                        <button onclick="changeLanguage('ru')" class="px-3 py-1 rounded-md text-sm font-medium transition" id="lang-ru">RU</button>
-                        <button onclick="changeLanguage('ro')" class="px-3 py-1 rounded-md text-sm font-medium transition" id="lang-ro">RO</button>
-                    </div>
-                </div>
-                <button onclick="scrollToUpload()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition" id="create-gift-btn">
-                    Подарить воспоминания
-                </button>
-            </div>
-        </nav>
-    </header>
-
+<body class="min-h-screen bg-white">
     <!-- Hero Section -->
-    <section class="gradient-bg text-white py-20">
+    <section class="relative bg-gradient-to-br from-primary-50 to-white py-20 md:py-32">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    Оживите воспоминания ваших родителей
+                <h1 class="text-4xl md:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
+                    Оживите старые фотографии
+                    <span class="text-primary-600"> для родителей</span>
                 </h1>
-                <p class="text-xl md:text-2xl mb-8 opacity-90" id="hero-description">
-                    Превратите старые фотографии в удивительные видео с помощью искусственного интеллекта. 
-                    Идеальный подарок для родителей старше 60 лет.
+                <p class="text-xl md:text-2xl text-neutral-600 mb-8 leading-relaxed">
+                    Превратите ценные семейные фотографии в эмоциональные видео, которые будут жить вечно
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <button onclick="scrollToUpload()" class="bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition hover-scale" id="upload-btn">
-                        <i class="fas fa-upload mr-2"></i>
-                        Загрузить фото
-                    </button>
-                </div>
                 
-                <!-- Auto-play Demo Video -->
-                <div class="mt-8 max-w-4xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <h3 class="text-xl font-semibold mb-4 text-center" id="demo-title">Посмотрите, как это работает</h3>
-                        <div class="aspect-w-16 aspect-h-9">
-                            <iframe 
-                                width="100%" 
-                                height="500" 
-                                src="https://www.youtube.com/embed/hFL6RX8vZDE?autoplay=1&mute=1" 
-                                title="AI Видео Подарки - Демо" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                                class="rounded-lg">
-                            </iframe>
-                        </div>
-                        <p class="text-gray-600 mt-4 text-center" id="demo-description">
-                            Превращаем старые фотографии в волшебные видео с помощью искусственного интеллекта
-                        </p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="glass-effect p-6 rounded-lg">
-                        <i class="fas fa-clock text-3xl mb-3"></i>
-                        <h3 class="font-semibold mb-2" id="feature1-title">Быстро</h3>
-                        <p class="opacity-80" id="feature1-desc">Всего 5 минут для создания видео</p>
-                    </div>
-                    <div class="glass-effect p-6 rounded-lg">
-                        <i class="fas fa-heart text-3xl mb-3"></i>
-                        <h3 class="font-semibold mb-2" id="feature2-title">Эмоционально</h3>
-                        <p class="opacity-80" id="feature2-desc">Дарите радость и ностальгию</p>
-                    </div>
-                    <div class="glass-effect p-6 rounded-lg">
-                        <i class="fas fa-shield-alt text-3xl mb-3"></i>
-                        <h3 class="font-semibold mb-2" id="feature3-title">Безопасно</h3>
-                        <p class="opacity-80" id="feature3-desc">Ваши фото под защитой</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    
-    <!-- How It Works -->
-    <section id="how-it-works" class="py-20 bg-gray-100">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                    Как это работает
-                </h2>
-                <p class="text-xl text-gray-600">
-                    Всего 3 простых шага для создания волшебного подарка
-                </p>
-            </div>
-            <div class="max-w-5xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="text-center">
-
-                        <div class="bg-white p-6 rounded-lg shadow-lg">
-                            <i class="fas fa-camera text-purple-600 text-3xl mb-4"></i>
-                            <h3 class="text-xl font-semibold mb-3">Загрузите фото</h3>
-                            <p class="text-gray-600">
-                                Выберите старые фотографии родителей. Чем качественнее фото, тем лучше результат
-                            </p>
-                        </div>
-                    </div>
-                    <div class="text-center">
-
-                        <div class="bg-white p-6 rounded-lg shadow-lg">
-                            <i class="fas fa-cog text-purple-600 text-3xl mb-4"></i>
-                            <h3 class="text-xl font-semibold mb-3">Настройте видео</h3>
-                            <p class="text-gray-600">
-                                Выберите музыку, стиль анимации и добавьте текстовое поздравление
-                            </p>
-                        </div>
-                    </div>
-                    <div class="text-center">
-
-                        <div class="bg-white p-6 rounded-lg shadow-lg">
-                            <i class="fas fa-check-circle text-purple-600 text-3xl mb-4"></i>
-                            <h3 class="text-xl font-semibold mb-3">Получите результат</h3>
-                            <p class="text-gray-600">
-                                Через несколько минут получите готовое видео и подарите его родителям
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Upload Section -->
-    <section id="upload-section" class="py-20">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                        Создайте волшебный подарок за 3 шага
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        Загрузите 3 фотографии и получите уникальное видео
-                    </p>
-                </div>
-                
-                <!-- Step 1: Upload Photos -->
-                <div id="step1" class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <div class="flex items-center mb-6">
-                        <div class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center mr-4 font-bold">1</div>
-                        <h3 class="text-xl font-semibold">Загрузите 3 фотографии</h3>
-                    </div>
-                    <div id="upload-area" class="upload-area rounded-lg p-12 text-center cursor-pointer" onclick="document.getElementById('file-input').click()">
-                        <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold mb-2">Перетащите фото сюда</h3>
-                        <p class="text-gray-600 mb-4">или нажмите для выбора файлов</p>
-                        <p class="text-sm text-gray-500">Поддерживаются JPG, PNG, WEBP (макс. 10MB)</p>
-                        <p class="text-sm text-purple-600 font-semibold mt-2">Нужно загрузить ровно 3 фотографии</p>
-                        <input type="file" id="file-input" class="hidden" accept="image/*" multiple onchange="handleMultipleFiles(event)">
-                    </div>
-                    <div id="preview-area" class="hidden mt-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold">Выбранные фото:</h3>
-                            <button onclick="removeFiles()" class="text-red-500 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                        <div id="photos-grid" class="grid grid-cols-3 gap-4">
-                            <!-- Photos will be inserted here -->
-                        </div>
-                        <button onclick="generateVideos()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition mt-6">
-                            <i class="fas fa-magic mr-2"></i>
-                            Сгенерировать видео
+                <!-- YouTube Video -->
+                <div class="mb-8">
+                    <div class="relative w-full max-w-2xl mx-auto aspect-[9/16] bg-neutral-900 rounded-lg overflow-hidden cursor-pointer" onclick="toggleSound()">
+                        <iframe 
+                            id="youtube-video"
+                            src="https://www.youtube.com/embed/Po9Af05DGnw?autoplay=1&mute=1&loop=1&playlist=Po9Af05DGnw&controls=0&showinfo=0&rel=0&enablejsapi=1" 
+                            class="absolute inset-0 w-full h-full"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
+                        <!-- Sound Control Button -->
+                        <button 
+                            id="sound-toggle"
+                            onclick="event.stopPropagation(); toggleSound();"
+                            class="absolute bottom-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-200 z-10">
+                            <svg id="sound-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <!-- Normal speaker (sound enabled) -->
+                                <g id="sound-normal" style="display:none">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                </g>
+                                <!-- Crossed speaker (sound disabled) -->
+                                <g id="sound-crossed">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                    <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </g>
+                            </svg>
                         </button>
                     </div>
                 </div>
                 
-                <!-- Step 2: Generate Videos -->
-                <div id="step2" class="bg-white rounded-xl shadow-lg p-8 mb-6 hidden">
-                    <div class="flex items-center mb-6">
-                        <div class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center mr-4 font-bold">2</div>
-                        <h3 class="text-xl font-semibold">Выберите понравившиеся видео</h3>
-                    </div>
-                    <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Generated videos will be inserted here -->
-                    </div>
-                    <button onclick="mergeSelectedVideos()" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition mt-6">
-                        <i class="fas fa-cut mr-2"></i>
-                        Объединить выбранные видео
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="handleCtaClick()" class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+                        Создать видео
                     </button>
                 </div>
-                
-                <!-- Step 3: Final Video -->
-                <div id="step3" class="bg-white rounded-xl shadow-lg p-8 hidden">
-                    <div class="flex items-center mb-6">
-                        <div class="bg-purple-600 text-white w-8 h-8 rounded-full flex items-center justify-center mr-4 font-bold">3</div>
-                        <h3 class="text-xl font-semibold">Ваше готовое видео</h3>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- How It Works Section -->
+    <section class="py-20 bg-neutral-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                    Как это работает
+                </h2>
+                <p class="text-xl text-neutral-600">
+                    Три простых шага для создания видео из ваших фотографий
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">1</span>
                     </div>
-                    <div id="final-video" class="text-center">
-                        <!-- Final video will be inserted here -->
+                    <h3 class="text-xl font-semibold mb-2">Загрузите фотографии</h3>
+                    <p class="text-neutral-600">Поделитесь 10 ценными семейными фотографиями</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">2</span>
                     </div>
+                    <h3 class="text-xl font-semibold mb-2">Магия ИИ</h3>
+                    <p class="text-neutral-600">Наш ИИ оживляет фотографии с естественными движениями</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary-600">3</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Получите видео</h3>
+                    <p class="text-neutral-600">Получите ваше красивое анимированное видео</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="py-20 bg-gray-100">
+    <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                    Тарифные планы
+                <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                    Создайте видео из ваших фотографий
                 </h2>
-                <p class="text-xl text-gray-600">
-                    Выберите подходящий вариант для создания идеального подарка
+                <p class="text-xl text-neutral-600">
+                    Превратите воспоминания в живое видео
                 </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                <div class="bg-white rounded-xl shadow-lg p-8 hover-scale">
-                    <div class="mb-6">
-                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                            <i class="fas fa-star text-purple-600 text-2xl"></i>
-                        </div>
+            <div class="max-w-2xl mx-auto">
+                <div class="border-2 border-primary-600 rounded-lg p-8 hover:shadow-lg transition relative">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Стоимость</h3>
+                    <div class="text-center mb-4">
+                        <span class="text-lg text-neutral-400 line-through mr-2">820 MDL</span>
+                        <span class="text-4xl font-bold text-primary-600">420 MDL</span>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4">Начальный</h3>
-                    <div class="text-4xl font-bold text-purple-600 mb-6">
-                        490 lei
-                        <span class="text-sm text-gray-500 font-normal">/video</span>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>1 видео до 15 секунд</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Простая анимация</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Стандартное качество</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>1 музыкальный трек</span>
-                        </li>
+                    <ul class="space-y-2 mb-6">
+                        <li>✓ 1 анимированное видео</li>
+                        <li>✓ 20 фотографий</li>
+                        <li>✓ 60 секунд видео</li>
+                        <li>✓ Full HD качество</li>
+                        <li>✓ 1 ревизия</li>
                     </ul>
-                    <button onclick="selectPlan('basic')" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300 transition">
-                        Выбрать план
-                    </button>
-                </div>
-                <div class="bg-purple-600 text-white rounded-xl shadow-lg p-8 hover-scale transform md:scale-105">
-                    <div class="bg-yellow-400 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">
-                        ПОПУЛЯРНЫЙ
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Стандарт</h3>
-                    <div class="text-4xl font-bold mb-6">
-                        1.990 lei
-                        <span class="text-sm opacity-80 font-normal">/video</span>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <i class="fas fa-check mr-3"></i>
-                            <span>1 видео до 60 секунд</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check mr-3"></i>
-                            <span>Продвинутая анимация</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check mr-3"></i>
-                            <span>HD качество</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check mr-3"></i>
-                            <span>10+ музыкальных треков</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check mr-3"></i>
-                            <span>Текстовые поздравления</span>
-                        </li>
-                    </ul>
-                    <button onclick="selectPlan('standard')" class="w-full bg-white text-purple-600 py-3 rounded-lg hover:bg-gray-100 transition font-semibold">
-                        Выбрать план
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl shadow-lg p-8 hover-scale">
-                    <h3 class="text-2xl font-bold mb-4">Премиум</h3>
-                    <div class="text-4xl font-bold text-purple-600 mb-6">
-                        3.990 lei
-                        <span class="text-sm text-gray-500 font-normal">/video</span>
-                    </div>
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Видео до 2 минут</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Профессиональная анимация</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Full HD качество</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Любая музыка</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Голосовое поздравление</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-check text-green-500 mr-3"></i>
-                            <span>Приоритетная обработка</span>
-                        </li>
-                    </ul>
-                    <button onclick="selectPlan('premium')" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition">
-                        Выбрать план
+                    <button onclick="selectPlan('premium')" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                        Создать видео
                     </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Payment Modal -->
-    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold">Оплата заказа</h3>
-                <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
+    <!-- FAQ Section -->
+    <section class="py-20 bg-neutral-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                    Часто задаваемые вопросы
+                </h2>
             </div>
-            <div id="selected-plan-info" class="mb-6 p-4 bg-purple-50 rounded-lg">
-                <!-- Plan info will be inserted here -->
-            </div>
-            <form onsubmit="processPayment(event)">
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Email для получения видео</label>
-                    <input type="email" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-600" placeholder="your@email.com">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2" id="payment-method-label">Способ оплаты</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                            <input type="radio" name="payment" value="mia" checked class="mr-3">
-                            <i class="fas fa-mobile-alt mr-2"></i>
-                            <span id="payment-mia">MIA (Moldova)</span>
-                        </label>
-                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                            <input type="radio" name="payment" value="card" class="mr-3">
-                            <i class="fas fa-credit-card mr-2"></i>
-                            <span id="payment-card">Банковская карта</span>
-                        </label>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="bg-white rounded-lg shadow-sm border border-neutral-200">
+                    <button onclick="toggleFAQ(0)" class="w-full px-6 py-4 text-left flex justify-between items-center">
+                        <span class="font-semibold">Сколько времени занимает создание видео?</span>
+                        <span id="faq-icon-0">+</span>
+                    </button>
+                    <div id="faq-content-0" class="hidden px-6 pb-4">
+                        <p class="text-neutral-600">Большинство видео готовы в течение 24-48 часов после загрузки фотографий.</p>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
-                    Оплатить
-                </button>
-            </form>
+                <div class="bg-white rounded-lg shadow-sm border border-neutral-200">
+                    <button onclick="toggleFAQ(1)" class="w-full px-6 py-4 text-left flex justify-between items-center">
+                        <span class="font-semibold">Какие форматы фотографий вы принимаете?</span>
+                        <span id="faq-icon-1">+</span>
+                    </button>
+                    <div id="faq-content-1" class="hidden px-6 pb-4">
+                        <p class="text-neutral-600">Мы принимаем форматы JPEG, PNG и WEBP. Фотографии должны быть четкими и хорошо освещенными.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-neutral-200">
+                    <button onclick="toggleFAQ(2)" class="w-full px-6 py-4 text-left flex justify-between items-center">
+                        <span class="font-semibold">Можно ли заказать ревизию?</span>
+                        <span id="faq-icon-2">+</span>
+                    </button>
+                    <div id="faq-content-2" class="hidden px-6 pb-4">
+                        <p class="text-neutral-600">Да! В пакетах Премиум и Семейный включены ревизии, чтобы вы были полностью довольны результатом.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="py-20 bg-primary-600">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                Готовы создать видео из ваших фотографий?
+            </h2>
+            <p class="text-xl text-primary-100 mb-8">
+                Не позволяйте ценным фотографиям исчезнуть - оживите их сегодня
+            </p>
+            <button onclick="handleCtaClick()" class="bg-white text-primary-600 hover:bg-primary-50 px-8 py-4 rounded-lg text-lg font-semibold transition">
+                Начать сейчас
+            </button>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer id="contact" class="bg-gray-800 text-white py-12">
+    <footer class="bg-neutral-900 text-white py-12">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <i class="fas fa-video text-purple-400 text-2xl"></i>
-                        <span class="text-xl font-bold">AI Видео Подарки</span>
-                    </div>
-                    <p class="text-gray-400">
-                        Создаем волшебные видео из старых фотографий для самых дорогих людей
-                    </p>
+            <div class="text-center space-y-4">
+                <h3 class="text-xl font-semibold">Memory Video Gifts</h3>
+                <p class="text-neutral-400 max-w-md mx-auto">
+                    Превращаем семейные фотографии в эмоциональные воспоминания, которые будут жить вечно.
+                </p>
+                <div class="text-sm text-neutral-500 pt-4 border-t border-neutral-800">
+                    © 2026 Memory Video Gifts. Все права защищены.
                 </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Сервис</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Как это работает</a></li>
-                        <li><a href="#" class="hover:text-white transition">Цены</a></li>
-                        <li><a href="#" class="hover:text-white transition">Примеры работ</a></li>
-                        <li><a href="#" class="hover:text-white transition">FAQ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Поддержка</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition">Помощь</a></li>
-                        <li><a href="#" class="hover:text-white transition">Контакты</a></li>
-                        <li><a href="#" class="hover:text-white transition">Политика конфиденциальности</a></li>
-                        <li><a href="#" class="hover:text-white transition">Условия использования</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Свяжитесь с нами</h4>
-                    <div class="space-y-2 text-gray-400">
-                        <p><i class="fas fa-envelope mr-2"></i>info@aivideogifts.ru</p>
-                        <p><i class="fas fa-phone mr-2"></i>+7 (800) 123-45-67</p>
-                        <div class="flex space-x-4 mt-4">
-                            <a href="#" class="hover:text-white transition"><i class="fab fa-vk text-xl"></i></a>
-                            <a href="#" class="hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
-                            <a href="#" class="hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2024 AI Видео Подарки. Все права защищены.</p>
             </div>
         </div>
     </footer>
 
-    <script src="translations.js"></script>
-    <script src="script.js"></script>
+    <!-- Sticky Mobile CTA -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 p-4 z-50">
+        <button onclick="handleCtaClick()" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition">
+            Создать видео
+        </button>
+    </div>
+
+    <script>
+        let isMuted = true;
+        let player = null;
+
+        // Load YouTube IFrame API
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-video', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            console.log('YouTube player is ready');
+        }
+
+        function toggleSound() {
+            const soundNormal = document.getElementById('sound-normal');
+            const soundCrossed = document.getElementById('sound-crossed');
+            
+            // Check if player is ready
+            if (!player || !player.unMute) {
+                console.log('Player not ready yet, trying again...');
+                return;
+            }
+            
+            if (isMuted) {
+                // Unmute (sound enabled)
+                try {
+                    player.unMute();
+                    soundNormal.style.display = 'block';
+                    soundCrossed.style.display = 'none';
+                    isMuted = false;
+                    console.log('Sound unmuted');
+                } catch (error) {
+                    console.error('Error unmuting:', error);
+                }
+            } else {
+                // Mute (sound disabled)
+                try {
+                    player.mute();
+                    soundNormal.style.display = 'none';
+                    soundCrossed.style.display = 'block';
+                    isMuted = true;
+                    console.log('Sound muted');
+                } catch (error) {
+                    console.error('Error muting:', error);
+                }
+            }
+        }
+
+        function handleCtaClick() {
+            console.log('CTA clicked - navigate to Stripe payment');
+            // Redirect to Stripe payment page
+            window.location.href = 'https://buy.stripe.com/your_stripe_payment_link';
+        }
+
+        function selectPlan(plan) {
+            console.log('Plan selected:', plan);
+            // Redirect to Stripe payment for premium package
+            window.location.href = 'https://buy.stripe.com/premium_plan_url';
+        }
+
+        function toggleFAQ(index) {
+            const content = document.getElementById(`faq-content-${index}`);
+            const icon = document.getElementById(`faq-icon-${index}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '-';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '+';
+            }
+        }
+
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
 </body>
 </html>
