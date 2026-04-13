@@ -49,7 +49,6 @@
                     <div class="bg-white p-2 rounded-lg shadow-sm">
                         <img src="./Assets/img/Centimental-logo.jpg" alt="Sentimental.videos" class="h-12 w-auto">
                     </div>
-                    <span class="text-xl font-bold text-neutral-900">Sentimental.videos</span>
                 </div>
                 <a href="index.html" class="text-neutral-600 hover:text-primary-600 transition">
                     ← Назад
@@ -81,7 +80,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-neutral-600">Цена:</span>
-                                <span class="font-bold text-xl text-primary-600">€29</span>
+                                <span class="font-bold text-xl text-primary-600">€19</span>
                             </div>
                         </div>
                     </div>
@@ -100,6 +99,10 @@
                             </li>
                             <li class="flex items-center">
                                 <span class="text-primary-600 mr-2">✓</span>
+                                <span>Персонализированное поздравление</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-primary-600 mr-2">✓</span>
                                 <span>Монтаж</span>
                             </li>
                             <li class="flex items-center">
@@ -112,17 +115,52 @@
                     <!-- Payment Instructions -->
                     <div class="bg-blue-50 rounded-lg p-6 mb-8">
                         <h2 class="text-xl font-semibold mb-4">Инструкция по оплате</h2>
-                        <div class="space-y-4">
+                        <div class="space-y-6">
+                            <!-- Credo Bank Transfer -->
                             <div>
-                                <h3 class="font-semibold mb-2">Банковская карта:</h3>
-                                <p class="text-neutral-600">Номер карты: <span class="font-mono">**** **** **** ****</span></p>
-                                <p class="text-neutral-600">Имя держателя: <span class="font-mono">CARD HOLDER NAME</span></p>
+                                <h3 class="font-semibold mb-3">Банковский перевод - Credo Bank:</h3>
+                                <div class="bg-white rounded-lg p-4 space-y-2">
+                                    <p class="text-neutral-600"><strong>Банк:</strong> Credo Bank</p>
+                                    <p class="text-neutral-600"><strong>Код:</strong> JSCRGE22</p>
+                                    <p class="text-neutral-600"><strong>Счет:</strong> GE60CD0360000060752036 (GEL, USD, EUR)</p>
+                                    <p class="text-neutral-600"><strong>Получатель:</strong> Musienko Eugene</p>
+                                    <p class="text-neutral-600"><strong>Email:</strong> info@credo.ge</p>
+                                    <p class="text-neutral-600"><strong>Телефон:</strong> (+995 32) 2424242</p>
+                                    <p class="text-neutral-600"><strong>Адрес:</strong> R. Tabukashvili St. #27, Tbilisi, Грузия</p>
+                                </div>
                             </div>
+                            
+                            <!-- Wise Payment -->
                             <div>
-                                <h3 class="font-semibold mb-2">Банковский перевод:</h3>
-                                <p class="text-neutral-600">IBAN: <span class="font-mono">MD00 **** **** ****</span></p>
-                                <p class="text-neutral-600">Получатель: <span class="font-mono">COMPANY NAME</span></p>
+                                <h3 class="font-semibold mb-3">Онлайн-платеж - Wise:</h3>
+                                <div class="bg-white rounded-lg p-4">
+                                    <p class="text-neutral-600 mb-3">Быстрый и безопасный платеж через Wise:</p>
+                                    <a href="https://wise.com/pay/r/OqufpIerDbGyq9s" target="_blank" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                        </svg>
+                                        Оплатить через Wise
+                                    </a>
+                                </div>
                             </div>
+                            
+                            <!-- USDT Payment -->
+                            <div>
+                                <h3 class="font-semibold mb-3">Криптовалюта - USDT:</h3>
+                                <div class="bg-white rounded-lg p-4">
+                                    <p class="text-neutral-600 mb-3">Платеж в USDT (TRC-20):</p>
+                                    <div class="flex items-center space-x-4">
+                                        <div>
+                                            <p class="text-neutral-600 font-mono text-sm">TFAam2aAQZqFhcxaF23ghVCv144WCexcYr</p>
+                                            <p class="text-neutral-600 text-sm">Сумма: 19 USDT</p>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <img src="./Assets/img/usdt-wallet-qr.jpg" alt="USDT Wallet QR" class="w-24 h-24 border border-neutral-300 rounded-lg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="bg-yellow-50 p-4 rounded-lg">
                                 <p class="text-sm font-medium text-yellow-800">
                                     <strong>Важно:</strong> пожалуйста, укажите номер заказа в комментарии к переводу, чтобы мы могли быстро идентифицировать ваш платёж.
