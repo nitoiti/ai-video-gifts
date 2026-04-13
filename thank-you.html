@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Спасибо за заказ - Sentimental.videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef7ee',
+                            100: '#fdecd1',
+                            200: '#fad4a3',
+                            300: '#f6b468',
+                            400: '#f18a3a',
+                            500: '#ed6f1c',
+                            600: '#dd5a0e',
+                            700: '#b8460f',
+                            800: '#933813',
+                            900: '#772f13',
+                        },
+                        neutral: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            300: '#d4d4d4',
+                            400: '#a3a3a3',
+                            500: '#737373',
+                            600: '#525252',
+                            700: '#404040',
+                            800: '#262626',
+                            900: '#171717',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-white">
+    <!-- Header -->
+    <header class="sticky top-0 left-0 right-0 z-50 bg-white bg-opacity-95 backdrop-blur-sm border-b border-neutral-100">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-2 rounded-lg shadow-sm">
+                        <img src="./Assets/img/Centimental-logo.jpg" alt="Sentimental.videos" class="h-12 w-auto">
+                    </div>
+                    <span class="text-xl font-bold text-neutral-900">Sentimental.videos</span>
+                </div>
+                <a href="index.html" class="text-neutral-600 hover:text-primary-600 transition">
+                    ← Назад
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Thank You Section -->
+    <section class="py-20 bg-gradient-to-br from-primary-50 to-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <!-- Success Icon -->
+                <div class="mb-8">
+                    <div class="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center mx-auto">
+                        <svg class="w-12 h-12 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-4.58-4.59L9 16.17z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Thank You Message -->
+                <h1 class="text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
+                    Спасибо за оплату!
+                </h1>
+                
+                <p class="text-xl text-neutral-600 mb-8">
+                    Ваш номер заказа: <span id="orderRef" class="font-mono font-bold text-primary-600">-</span>
+                </p>
+
+                <!-- Next Steps -->
+                <div class="bg-white rounded-lg shadow-sm border border-neutral-200 p-8 mb-8">
+                    <h2 class="text-2xl font-semibold mb-6 text-center">Что делать дальше?</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-primary-600 font-bold">1</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Отправьте до 10 фото</h3>
+                                <p class="text-neutral-600">Отправьте ваши фотографии в Telegram, WhatsApp или Viber. При отправке укажите номер заказа.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-primary-600 font-bold">2</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Мы начнём работу</h3>
+                                <p class="text-neutral-600">После получения фото мы начнём создавать ваше сентиментальное видео.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="text-primary-600 font-bold">3</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Готовность до 24 часов</h3>
+                                <p class="text-neutral-600">Ваше видео будет готово в течение 24 часов после получения фото.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="bg-neutral-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-semibold mb-6 text-center">Связаться с нами</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <h3 class="font-semibold mb-3">Telegram</h3>
+                            <!-- EDITABLE: Telegram link -->
+                            <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                                @sentimental_videos
+                            </a>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h3 class="font-semibold mb-3">WhatsApp</h3>
+                            <!-- EDITABLE: WhatsApp link -->
+                            <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                                +373 123 456 789
+                            </a>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h3 class="font-semibold mb-3">Viber</h3>
+                            <!-- EDITABLE: Viber contact -->
+                            <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                                +373 123 456 789
+                            </a>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h3 class="font-semibold mb-3">Email поддержки</h3>
+                            <!-- EDITABLE: Support email -->
+                            <a href="mailto:support@sentimental.video" class="text-primary-600 hover:text-primary-700 font-medium">
+                                support@sentimental.video
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back to Home Button -->
+                <div class="text-center mt-8">
+                    <a href="index.html" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-6h-3l-4 4h8l4-4z"/>
+                        </svg>
+                        Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-neutral-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center space-y-4">
+                <h3 class="text-xl font-semibold">Sentimental.videos</h3>
+                <p class="text-neutral-400 max-w-md mx-auto">
+                    Превращаем семейные фотографии в эмоциональные воспоминания, которые будут жить вечно.
+                </p>
+                <div class="text-sm text-neutral-500 pt-4 border-t border-neutral-800">
+                    © 2026 Sentimental.videos. Все права защищены.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Get order data from localStorage
+        function getOrderData() {
+            const orderData = localStorage.getItem('currentOrder');
+            const paymentData = localStorage.getItem('paymentConfirmed');
+            
+            return {
+                order: orderData ? JSON.parse(orderData) : null,
+                payment: paymentData ? JSON.parse(paymentData) : null
+            };
+        }
+
+        // Display order reference
+        function displayOrderData() {
+            const { order, payment } = getOrderData();
+            if (order && payment) {
+                document.getElementById('orderRef').textContent = order.orderRef;
+            } else {
+                // Redirect to home if no order data
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderData();
+        });
+    </script>
+</body>
+</html>

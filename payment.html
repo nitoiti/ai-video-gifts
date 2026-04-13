@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата заказа - Sentimental.videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef7ee',
+                            100: '#fdecd1',
+                            200: '#fad4a3',
+                            300: '#f6b468',
+                            400: '#f18a3a',
+                            500: '#ed6f1c',
+                            600: '#dd5a0e',
+                            700: '#b8460f',
+                            800: '#933813',
+                            900: '#772f13',
+                        },
+                        neutral: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            300: '#d4d4d4',
+                            400: '#a3a3a3',
+                            500: '#737373',
+                            600: '#525252',
+                            700: '#404040',
+                            800: '#262626',
+                            900: '#171717',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-white">
+    <!-- Header -->
+    <header class="sticky top-0 left-0 right-0 z-50 bg-white bg-opacity-95 backdrop-blur-sm border-b border-neutral-100">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-2 rounded-lg shadow-sm">
+                        <img src="./Assets/img/Centimental-logo.jpg" alt="Sentimental.videos" class="h-12 w-auto">
+                    </div>
+                    <span class="text-xl font-bold text-neutral-900">Sentimental.videos</span>
+                </div>
+                <a href="index.html" class="text-neutral-600 hover:text-primary-600 transition">
+                    ← Назад
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Payment Section -->
+    <section class="py-20 bg-gradient-to-br from-primary-50 to-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-lg shadow-sm border border-neutral-200 p-8">
+                    <h1 class="text-3xl font-bold text-neutral-900 mb-8 text-center">
+                        Оплата заказа
+                    </h1>
+                    
+                    <!-- Order Summary -->
+                    <div class="bg-neutral-50 rounded-lg p-6 mb-8">
+                        <h2 class="text-xl font-semibold mb-4">Детали заказа</h2>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-neutral-600">Номер заказа:</span>
+                                <span id="orderRef" class="font-mono font-bold text-primary-600">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-neutral-600">Продукт:</span>
+                                <span class="font-semibold">Сентиментальное видео</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-neutral-600">Цена:</span>
+                                <span class="font-bold text-xl text-primary-600">€29</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- What's Included -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-semibold mb-4">Что включено:</h2>
+                        <ul class="space-y-2">
+                            <li class="flex items-center">
+                                <span class="text-primary-600 mr-2">✓</span>
+                                <span>Видео из до 10 фото</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-primary-600 mr-2">✓</span>
+                                <span>Музыка</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-primary-600 mr-2">✓</span>
+                                <span>Монтаж</span>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-primary-600 mr-2">✓</span>
+                                <span>Срок до 24 часов</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Payment Instructions -->
+                    <div class="bg-blue-50 rounded-lg p-6 mb-8">
+                        <h2 class="text-xl font-semibold mb-4">Инструкция по оплате</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold mb-2">Банковская карта:</h3>
+                                <p class="text-neutral-600">Номер карты: <span class="font-mono">**** **** **** ****</span></p>
+                                <p class="text-neutral-600">Имя держателя: <span class="font-mono">CARD HOLDER NAME</span></p>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold mb-2">Банковский перевод:</h3>
+                                <p class="text-neutral-600">IBAN: <span class="font-mono">MD00 **** **** ****</span></p>
+                                <p class="text-neutral-600">Получатель: <span class="font-mono">COMPANY NAME</span></p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <p class="text-sm font-medium text-yellow-800">
+                                    <strong>Важно:</strong> пожалуйста, укажите номер заказа в комментарии к переводу, чтобы мы могли быстро идентифицировать ваш платёж.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Button -->
+                    <div class="text-center">
+                        <button 
+                            onclick="confirmPayment()" 
+                            class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+                            Я оплатил(а)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Get order data from localStorage
+        function getOrderData() {
+            const orderData = localStorage.getItem('currentOrder');
+            return orderData ? JSON.parse(orderData) : null;
+        }
+
+        // Display order reference
+        function displayOrderData() {
+            const orderData = getOrderData();
+            if (orderData) {
+                document.getElementById('orderRef').textContent = orderData.orderRef;
+            }
+        }
+
+        // Confirm payment
+        function confirmPayment() {
+            const orderData = getOrderData();
+            if (orderData) {
+                // Store payment confirmation
+                localStorage.setItem('paymentConfirmed', JSON.stringify({
+                    ...orderData,
+                    paymentConfirmed: true,
+                    paymentTime: new Date().toISOString()
+                }));
+                
+                // Redirect to thank you page
+                window.location.href = `thank-you.html?order=${orderData.orderRef}`;
+            } else {
+                alert('Ошибка: данные заказа не найдены');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            displayOrderData();
+        });
+    </script>
+</body>
+</html>

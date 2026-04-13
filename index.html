@@ -57,7 +57,7 @@
         </div>
     </header>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-primary-50 to-white py-20 md:py-32">
+    <section class="relative bg-gradient-to-br from-primary-50 to-white py-10 md:py-32">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="text-4xl md:text-6xl font-bold text-neutral-900 mb-6 leading-tight">
@@ -129,8 +129,8 @@
                     <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-2xl font-bold text-primary-600">2</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Магия ИИ</h3>
-                    <p class="text-neutral-600">Наш ИИ оживляет фотографии с естественными движениями</p>
+                    <h3 class="text-xl font-semibold mb-2">Магия</h3>
+                    <p class="text-neutral-600">Мы улучшаем фото и оживляем ваши фотографии</p>
                 </div>
                 <div class="text-center">
                     <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -300,15 +300,15 @@
         }
 
         function handleCtaClick() {
-            console.log('CTA clicked - navigate to Stripe payment');
-            // Redirect to Stripe payment page
-            window.location.href = 'https://buy.stripe.com/your_stripe_payment_link';
+            console.log('CTA clicked - navigate to checkout');
+            // Redirect to checkout page
+            window.location.href = 'checkout.html';
         }
 
         function selectPlan(plan) {
             console.log('Plan selected:', plan);
-            // Redirect to Stripe payment for premium package
-            window.location.href = 'https://buy.stripe.com/premium_plan_url';
+            // Redirect to checkout page
+            window.location.href = 'checkout.html';
         }
 
         function toggleFAQ(index) {
