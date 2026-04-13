@@ -72,7 +72,14 @@
                         <div class="space-y-2">
                             <div class="flex justify-between">
                                 <span class="text-neutral-600">Номер заказа:</span>
-                                <span id="orderRef" class="font-mono font-bold text-primary-600">-</span>
+                                <div class="flex items-center space-x-2">
+                                    <span id="orderRef" class="font-mono font-bold text-primary-600">-</span>
+                                    <button id="copy-order-ref" class="text-neutral-600 hover:text-primary-600 transition" title="Copy order reference">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M16 1H8C4.691 1 2 3.691 2 7v10c0 3.309 2.691 6 6 6h8c3.309 0 6-2.691 6-6V7c0-3.309-2.691-6-6-6zm0 12H8V7h8v6zm-6 4H2v-4c0-2.209 1.791-4 4-4h12c2.209 0 4 1.791 4 4v4c0 2.209-1.791 4-4 4h-8c-2.209 0-4-1.791-4-4zm0-8H2V7c0-2.209 1.791-4 4-4h6c2.209 0 4 1.791 4 4v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-neutral-600">Продукт:</span>
@@ -114,11 +121,11 @@
 
                     <!-- Payment Instructions -->
                     <div class="bg-blue-50 rounded-lg p-6 mb-8">
-                        <h2 class="text-xl font-semibold mb-4">Инструкция по оплате</h2>
+                        <h2 class="text-xl font-semibold mb-4">Способы оплаты</h2>
                         <div class="space-y-6">
                             <!-- Card Payment -->
                             <div>
-                                <h3 class="font-semibold mb-3">Платеж по карте:</h3>
+                                <h3 class="font-semibold mb-3">1. Платеж по карте:</h3>
                                 <div class="bg-white rounded-lg p-4 space-y-2">
                                     <p class="text-neutral-600"><strong>Номер карты:</strong> 5480282861939678</p>
                                     <p class="text-neutral-600"><strong>Владелец карты:</strong> Evghenii Musienco</p>
@@ -129,7 +136,7 @@
                             
                             <!-- Credo Bank Transfer -->
                             <div>
-                                <h3 class="font-semibold mb-3">Банковский перевод - Credo Bank:</h3>
+                                <h3 class="font-semibold mb-3">2. Банковский перевод - Credo Bank:</h3>
                                 <div class="bg-white rounded-lg p-4 space-y-2">
                                     <p class="text-neutral-600"><strong>Банк:</strong> Credo Bank</p>
                                     <p class="text-neutral-600"><strong>SWIDT Код:</strong> JSCRGE22</p>
@@ -143,7 +150,7 @@
                             
                             <!-- Wise Payment -->
                             <div>
-                                <h3 class="font-semibold mb-3">Онлайн-платеж - Wise:</h3>
+                                <h3 class="font-semibold mb-3">3. Онлайн-платеж - Wise:</h3>
                                 <div class="bg-white rounded-lg p-4">
                                     <p class="text-neutral-600 mb-3">Быстрый и безопасный платеж через Wise:</p>
                                     <a href="https://wise.com/pay/r/OqufpIerDbGyq9s" target="_blank" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition">
@@ -157,7 +164,7 @@
                             
                             <!-- USDT Payment -->
                             <div>
-                                <h3 class="font-semibold mb-3">Криптовалюта - USDT:</h3>
+                                <h3 class="font-semibold mb-3">4. Криптовалюта - USDT:</h3>
                                 <div class="bg-white rounded-lg p-4">
                                     <p class="text-neutral-600 mb-3">Платеж в USDT (TRC-20):</p>
                                     <div class="flex items-center space-x-4">
@@ -205,6 +212,40 @@
             const orderData = getOrderData();
             if (orderData) {
                 document.getElementById('orderRef').textContent = orderData.orderRef;
+                
+                // Update Wise link with order reference
+                const wiseLink = document.querySelector('a[href*="wise.com"]');
+                if (wiseLink) {
+                    const baseWiseUrl = 'https://wise.com/pay/r/OqufpIerDbGyq9s';
+                    const wiseUrlWithOrder = `${baseWiseUrl}?order=${orderData.orderRef}`;
+                    wiseLink.href = wiseUrlWithOrder;
+                }
+            }
+        }
+
+        // Copy order reference
+        function copyOrderRef() {
+            const orderRef = document.getElementById('orderRef').textContent;
+            if (orderRef && orderRef !== '-') {
+                navigator.clipboard.writeText(orderRef).then(() => {
+                    // Show success feedback
+                    const copyButton = document.getElementById('copy-order-ref');
+                    const originalHTML = copyButton.innerHTML;
+                    copyButton.innerHTML = '<svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-4.58-4.59L9 16.17z"/></svg>';
+                    
+                    setTimeout(() => {
+                        copyButton.innerHTML = originalHTML;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy order reference:', err);
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = orderRef;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                });
             }
         }
 
@@ -230,6 +271,12 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             displayOrderData();
+            
+            // Add copy button event listener
+            const copyButton = document.getElementById('copy-order-ref');
+            if (copyButton) {
+                copyButton.addEventListener('click', copyOrderRef);
+            }
         });
     </script>
 </body>
