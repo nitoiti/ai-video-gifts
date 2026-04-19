@@ -357,16 +357,36 @@
             console.log('Payment issue tracked - user needs help');
         }
 
+        // Google Apps Script URL - ЗАМЕНИТЕ НА ВАШ URL (тот же, что в checkout.html)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+        
+        // Update order status in Google Sheets
+        async function updateOrderStatus(orderRef, status) {
+            try {
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?orderRef=${orderRef}&status=${status}`);
+                const result = await response.json();
+                console.log('Status updated:', result);
+                return result;
+            } catch (error) {
+                console.error('Error updating status:', error);
+                // Don't block the flow if Google Sheets fails
+                return { result: 'error', message: error.message };
+            }
+        }
+
         // Confirm payment
-        function confirmPayment() {
+        async function confirmPayment() {
             const orderData = getOrderData();
             if (orderData) {
-                // Store payment confirmation
+                // Store payment confirmation locally
                 localStorage.setItem('paymentConfirmed', JSON.stringify({
                     ...orderData,
                     paymentConfirmed: true,
                     paymentTime: new Date().toISOString()
                 }));
+                
+                // Update status in Google Sheets to "Paid"
+                await updateOrderStatus(orderData.orderRef, 'Paid');
                 
                 // Redirect to thank you page
                 window.location.href = `thank-you.html?order=${orderData.orderRef}`;

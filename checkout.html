@@ -187,8 +187,37 @@
         // Show package on page load
         displaySelectedPackage();
 
+        // Google Apps Script URL - ЗАМЕНИТЕ НА ВАШ URL ПОСЛЕ РАЗВЕРТЫВАНИЯ
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+        
+        // Send order to Google Sheets
+        async function sendOrderToGoogleSheets(orderData) {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        orderRef: orderData.orderRef,
+                        name: orderData.name,
+                        email: orderData.email,
+                        contact: orderData.contact,
+                        packageName: orderData.package ? orderData.package.name : 'Standard',
+                        priceMDL: orderData.package ? orderData.package.priceMDL : 530,
+                        comment: orderData.comment,
+                        status: 'New'
+                    })
+                });
+                const result = await response.json();
+                console.log('Google Sheets result:', result);
+                return result;
+            } catch (error) {
+                console.error('Error sending to Google Sheets:', error);
+                // Continue even if Google Sheets fails - don't block the order
+                return { result: 'error', message: error.message };
+            }
+        }
+
         // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Validate form
@@ -205,7 +234,7 @@
             
             // Get selected package
             const packageData = localStorage.getItem('selectedPackage');
-            const pkg = packageData ? JSON.parse(packageData) : { name: 'Стандартный', price: 19, videosPerPhoto: 6, maxPhotos: 10, totalVideos: 60 };
+            const pkg = packageData ? JSON.parse(packageData) : { name: 'Runway Gen 4', priceMDL: 530, videosPerPhoto: 3, maxPhotos: 7, totalVideos: 21, timeline: '1 неделя', model: 'Runway Gen 4' };
             
             // Store order data
             const orderData = {
@@ -219,6 +248,9 @@
             };
             
             localStorage.setItem('currentOrder', JSON.stringify(orderData));
+            
+            // Send to Google Sheets
+            await sendOrderToGoogleSheets(orderData);
             
             // Redirect to payment
             window.location.href = `payment.html?order=${orderData.orderRef}`;
