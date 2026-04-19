@@ -90,7 +90,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-neutral-600">Цена:</span>
-                                <span id="orderPrice" class="font-bold text-xl text-primary-600">$-</span>
+                                <span id="orderPrice" class="font-bold text-xl text-primary-600">- MDL</span>
                             </div>
                         </div>
                     </div>
@@ -233,10 +233,12 @@
             if (orderData) {
                 document.getElementById('orderRef').textContent = orderData.orderRef;
                 
-                // Display price from package
-                const price = orderData.package ? orderData.package.price : 19;
-                document.getElementById('orderPrice').textContent = '$' + price;
-                document.getElementById('usdtAmount').textContent = price + ' USDT';
+                // Display price from package (in MDL)
+                const priceMDL = orderData.package ? orderData.package.priceMDL : 530;
+                document.getElementById('orderPrice').textContent = priceMDL + ' MDL';
+                // USDT equivalent for crypto payments (approximate rate 1 MDL = 0.057 USD)
+                const usdtAmount = Math.round(priceMDL * 0.057);
+                document.getElementById('usdtAmount').textContent = usdtAmount + ' USDT';
                 
                 // Update Wise link with order reference
                 const wiseLink = document.querySelector('a[href*="wise.com"]');
