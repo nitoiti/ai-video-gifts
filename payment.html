@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оплата заказа - Sentimental.videos</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P6JRM22MPE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-P6JRM22MPE');
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -166,7 +176,7 @@
                                 <h3 class="font-semibold mb-3">3. Оплатите онлайн через Wise:</h3>
                                 <div class="bg-white rounded-lg p-4">
                                     <p class="text-neutral-600 mb-3">Быстрый и безопасный платеж через Wise:</p>
-                                    <a href="https://wise.com/pay/r/OqufpIerDbGyq9s" target="_blank" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                                    <a href="https://wise.com/pay/r/OqufpIerDbGyq9s" target="_blank" onclick="trackPaymentMethod('wise')" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition">
                                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                                         </svg>
@@ -178,7 +188,7 @@
                             <!-- USDT Payment -->
                             <div>
                                 <h3 class="font-semibold mb-3">4. Отправьте на крипто-кошелек USDT:</h3>
-                                <div class="bg-white rounded-lg p-4">
+                                <div class="bg-white rounded-lg p-4" onclick="trackPaymentMethod('usdt')">
                                     <p class="text-neutral-600 mb-4">Платеж в USDT (TRC-20):</p>
                                     
                                     <!-- QR Code - Centered on mobile -->
@@ -358,7 +368,16 @@
         }
 
         // Google Apps Script URL - ЗАМЕНИТЕ НА ВАШ URL (тот же, что в checkout.html)
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby93zURRC3iZRk-d1Blwt9AIFv4HCSsxkxb7InH2fEFqRVIjfGP_fQmD1su0WAegfjRJQ/exec';
+        
+        // Track payment method selection
+        function trackPaymentMethod(method) {
+            gtag('event', 'payment_method_click', {
+                'event_category': 'funnel',
+                'event_label': method
+            });
+            console.log('Payment method tracked:', method);
+        }
         
         // Update order status in Google Sheets
         async function updateOrderStatus(orderRef, status) {
@@ -384,6 +403,29 @@
                     paymentConfirmed: true,
                     paymentTime: new Date().toISOString()
                 }));
+                
+                // Track payment confirmation with revenue in GA
+                const priceMDL = orderData.package ? orderData.package.priceMDL : 530;
+                const priceUSD = Math.round(priceMDL * 0.057); // Approximate conversion
+                
+                gtag('event', 'purchase', {
+                    'transaction_id': orderData.orderRef,
+                    'value': priceUSD,
+                    'currency': 'USD',
+                    'items': [{
+                        'item_name': orderData.package ? orderData.package.name : 'Standard Package',
+                        'item_id': orderData.package ? orderData.package.model : 'standard',
+                        'price': priceUSD,
+                        'quantity': 1
+                    }]
+                });
+                
+                // Also track simple confirmation event
+                gtag('event', 'payment_confirmed', {
+                    'event_category': 'funnel',
+                    'event_label': orderData.package ? orderData.package.name : 'Standard',
+                    'value': priceMDL
+                });
                 
                 // Update status in Google Sheets to "Paid"
                 await updateOrderStatus(orderData.orderRef, 'Paid');

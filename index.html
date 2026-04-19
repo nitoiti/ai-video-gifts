@@ -186,7 +186,7 @@
                         </li>
                     </ul>
                     <button onclick="selectPlan('tier1')" class="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-900 px-6 py-3 rounded-lg font-semibold transition">
-                        Выбрать
+                        Заказать
                     </button>
                 </div>
                 
@@ -225,7 +225,7 @@
                         </li>
                     </ul>
                     <button onclick="selectPlan('tier2')" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition">
-                        Выбрать
+                        Заказать
                     </button>
                 </div>
                 
@@ -261,7 +261,7 @@
                         </li>
                     </ul>
                     <button onclick="selectPlan('tier3')" class="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-900 px-6 py-3 rounded-lg font-semibold transition">
-                        Выбрать
+                        Заказать
                     </button>
                 </div>
             </div>
@@ -382,6 +382,12 @@
                     soundCrossed.style.display = 'none';
                     isMuted = false;
                     console.log('Sound unmuted');
+                    
+                    // Track video sound enabled in GA
+                    gtag('event', 'video_sound_enabled', {
+                        'event_category': 'engagement',
+                        'event_label': 'user_enabled_sound'
+                    });
                 } catch (error) {
                     console.error('Error unmuting:', error);
                 }
@@ -439,8 +445,17 @@
                 }
             };
             
+            const selectedPackage = packages[plan];
+            
+            // Track package selection in GA with value
+            gtag('event', 'select_package', {
+                'event_category': 'funnel',
+                'event_label': selectedPackage.name,
+                'value': selectedPackage.priceMDL
+            });
+            
             // Save selected package to localStorage
-            localStorage.setItem('selectedPackage', JSON.stringify(packages[plan]));
+            localStorage.setItem('selectedPackage', JSON.stringify(selectedPackage));
             
             // Redirect to checkout page
             window.location.href = 'checkout.html';

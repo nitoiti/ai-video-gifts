@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оформление заказа - Sentimental.videos</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P6JRM22MPE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-P6JRM22MPE');
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -188,7 +198,7 @@
         displaySelectedPackage();
 
         // Google Apps Script URL - ЗАМЕНИТЕ НА ВАШ URL ПОСЛЕ РАЗВЕРТЫВАНИЯ
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby93zURRC3iZRk-d1Blwt9AIFv4HCSsxkxb7InH2fEFqRVIjfGP_fQmD1su0WAegfjRJQ/exec';
         
         // Send order to Google Sheets
         async function sendOrderToGoogleSheets(orderData) {
@@ -251,6 +261,13 @@
             
             // Send to Google Sheets
             await sendOrderToGoogleSheets(orderData);
+            
+            // Track checkout form submission in GA
+            gtag('event', 'checkout_form_submit', {
+                'event_category': 'funnel',
+                'event_label': pkg.name,
+                'value': pkg.priceMDL
+            });
             
             // Redirect to payment
             window.location.href = `payment.html?order=${orderData.orderRef}`;
