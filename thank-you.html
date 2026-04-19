@@ -280,6 +280,12 @@
             const { order, payment } = getOrderData();
             if (order && payment) {
                 document.getElementById('orderRef').textContent = order.orderRef;
+                
+                // Update video counts from package
+                if (order.package) {
+                    document.getElementById('videoCount').textContent = order.package.videosPerPhoto;
+                    document.getElementById('totalVideos').textContent = order.package.totalVideos;
+                }
             } else {
                 // Redirect to home if no order data
                 window.location.href = 'index.html';
