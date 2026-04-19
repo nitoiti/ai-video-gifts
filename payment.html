@@ -85,7 +85,7 @@
                                 </p>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-neutral-600">Продукт:</span>
+                                <span class="text-neutral-600">Продукт: </span>
                                 <span class="font-semibold">Сентиментальное видео</span>
                             </div>
                             <div class="flex justify-between">
@@ -167,17 +167,34 @@
                             
                             <!-- USDT Payment -->
                             <div>
-                                <h3 class="font-semibold mb-3">4. Отправьте на крипто-кошелек- USDT:</h3>
+                                <h3 class="font-semibold mb-3">4. Отправьте на крипто-кошелек USDT:</h3>
                                 <div class="bg-white rounded-lg p-4">
-                                    <p class="text-neutral-600 mb-3">Платеж в USDT (TRC-20):</p>
-                                    <div class="flex items-center space-x-4">
-                                        <div>
-                                            <p class="text-neutral-600 font-mono text-sm">TFAam2aAQZqFhcxaF23ghVCv144WCexcYr</p>
-                                            <p class="text-neutral-600 text-sm">Сумма: 19 USDT</p>
+                                    <p class="text-neutral-600 mb-4">Платеж в USDT (TRC-20):</p>
+                                    
+                                    <!-- QR Code - Centered on mobile -->
+                                    <div class="flex justify-center mb-4">
+                                        <img src="./Assets/img/usdt-wallet-qr.jpg" alt="USDT Wallet QR" class="w-32 h-32 sm:w-28 sm:h-28 border border-neutral-300 rounded-lg">
+                                    </div>
+                                    
+                                    <!-- Wallet Address with Copy Button -->
+                                    <div class="bg-neutral-50 rounded-lg p-3 mb-3">
+                                        <p class="text-xs text-neutral-500 mb-1">Адрес кошелька:</p>
+                                        <div class="flex items-center justify-between gap-2">
+                                            <code class="text-sm font-mono text-neutral-700 break-all flex-1">
+                                                TFAam2aAQZqFhcxaF23ghVCv144WCexcYr
+                                            </code>
+                                            <button onclick="copyUSDTAddress()" class="flex-shrink-0 text-neutral-500 hover:text-primary-600 transition p-1" title="Copy address">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <div class="flex-shrink-0">
-                                            <img src="./Assets/img/usdt-wallet-qr.jpg" alt="USDT Wallet QR" class="w-24 h-24 border border-neutral-300 rounded-lg">
-                                        </div>
+                                    </div>
+                                    
+                                    <!-- Amount -->
+                                    <div class="flex justify-between items-center bg-primary-50 rounded-lg p-3">
+                                        <span class="text-neutral-600">Сумма к оплате:</span>
+                                        <span class="font-bold text-primary-600">19 USDT</span>
                                     </div>
                                 </div>
                             </div>
@@ -250,6 +267,25 @@
                     document.body.removeChild(textArea);
                 });
             }
+        }
+
+        // Copy USDT wallet address
+        function copyUSDTAddress() {
+            const address = 'TFAam2aAQZqFhcxaF23ghVCv144WCexcYr';
+            navigator.clipboard.writeText(address).then(() => {
+                // Show success feedback
+                alert('Адрес кошелька скопирован!');
+            }).catch(err => {
+                console.error('Failed to copy address:', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = address;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Адрес кошелька скопирован!');
+            });
         }
 
         // Confirm payment
