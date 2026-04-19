@@ -217,13 +217,19 @@
                         </div>
                     </div>
 
-                    <!-- Confirmation Button -->
-                    <div class="text-center">
+                    <!-- Confirmation Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <button 
                             onclick="confirmPayment()" 
                             class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
-                            Я оплатил(а)
+                            ✅ Я оплатил(а)
                         </button>
+                        <a 
+                            href="payment-help.html" 
+                            onclick="trackPaymentIssue()"
+                            class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-8 py-4 rounded-lg text-lg font-semibold transition text-center">
+                            ⚠️ Не получилось оплатить
+                        </a>
                     </div>
                 </div>
             </div>
@@ -330,6 +336,19 @@
                 document.body.removeChild(textArea);
                 alert('Адрес кошелька скопирован!');
             });
+        }
+
+        // Track payment issue for Google Analytics
+        function trackPaymentIssue() {
+            // This will work when Google Analytics is connected
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'payment_issue', {
+                    'event_category': 'payment',
+                    'event_label': 'user_could_not_pay',
+                    'value': 1
+                });
+            }
+            console.log('Payment issue tracked - user needs help');
         }
 
         // Confirm payment
