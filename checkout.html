@@ -11,8 +11,13 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-P6JRM22MPE');
-        gtag('config', 'AW-18107391899');
+        gtag('config', 'G-P6JRM22MPE', {
+            'linker': { 'accept_incoming': true }
+        });
+        gtag('config', 'AW-18107391899', {
+            'allow_enhanced_conversions': true
+        });
+        gtag('set', 'url_passthrough', true);
     </script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -263,7 +268,15 @@
             // Send to Google Sheets
             await sendOrderToGoogleSheets(orderData);
             
-            // Track checkout form submission in GA
+            const valueUSD = Math.round(pkg.priceMDL * 0.057);
+
+            // Standard event for Google Ads Performance Max
+            gtag('event', 'generate_lead', {
+                'currency': 'USD',
+                'value': valueUSD
+            });
+
+            // Custom funnel event
             gtag('event', 'checkout_form_submit', {
                 'event_category': 'funnel',
                 'event_label': pkg.name,
