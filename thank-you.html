@@ -15,6 +15,23 @@
         gtag('config', 'AW-18107391899');
     </script>
     
+    <!-- Google Ads Conversion Event - fires on thank-you page with dynamic value -->
+    <script>
+        (function() {
+            const orderData = localStorage.getItem('currentOrder');
+            const pkg = orderData ? JSON.parse(orderData).package : null;
+            const priceMDL = pkg ? pkg.priceMDL : 530;
+            const valueUSD = Math.round(priceMDL * 0.057 * 100) / 100;
+            
+            gtag('event', 'conversion', {
+                'send_to': 'AW-18107391899/Ab5ICM_J2J8cEJu_o7pD',
+                'value': valueUSD,
+                'currency': 'USD',
+                'transaction_id': orderData ? JSON.parse(orderData).orderRef : ''
+            });
+        })();
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
